@@ -14,4 +14,5 @@ infrastructure.
 
 - `POST /api/auth/register` — `{ username, email, password }`
 - `POST /api/auth/login` — `{ email, password }` → `{ token, username }`
+- `GET /api/auth/verify` — `Authorization: Bearer <token>` → `{ valid, userId, username, expiresAt }`
 - `GET /api/health`

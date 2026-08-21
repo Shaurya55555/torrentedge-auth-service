@@ -41,6 +41,20 @@ app.post('/api/auth/login', async (req, res) => {
   res.json({ token, username: user.username });
 });
 
+app.get('/api/auth/verify', (req, res) => {
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (!token) {
+    return res.status(401).json({ valid: false, message: 'Missing bearer token' });
+  }
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    res.json({ valid: true, userId: payload.userId, username: payload.username, expiresAt: payload.exp });
+  } catch (err) {
+    res.status(401).json({ valid: false, message: 'Invalid or expired token' });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`TorrentEdge auth service running on port ${PORT}`);
